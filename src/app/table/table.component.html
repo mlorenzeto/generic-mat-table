@@ -1,0 +1,28 @@
+<mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+  <ng-container [matColumnDef]="column.key" *ngFor="let column of columns">
+    <ng-container *ngIf="column.canSort; else noSort">
+      <mat-header-cell *matHeaderCellDef mat-sort-header="{{ column.key }}">
+        {{ column.name }}
+      </mat-header-cell>
+    </ng-container>
+    <ng-template #noSort>
+      <mat-header-cell *matHeaderCellDef>{{ column.name }}</mat-header-cell>
+    </ng-template>
+
+    <ng-container *ngIf="!column.isButton; else isButton">
+      <mat-cell *matCellDef="let element">{{ element[column.key] }}</mat-cell>
+    </ng-container>
+
+    <ng-template #isButton>
+      <mat-cell *matCellDef="let element">
+        <button mat-icon-button (click)="actionClick(element)">
+          <mat-icon class="mat-18">{{column.icon}}</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-template>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row [ngClass]="{'highlight': selectedRowId == row.id}" *matRowDef="let row; columns: displayedColumns"></mat-row>
+</mat-table>
+<mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
